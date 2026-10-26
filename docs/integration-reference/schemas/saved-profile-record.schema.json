@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://radix.local/schemas/saved-profile-record.schema.json",
+  "title": "SavedCandidateProfileRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_id",
+    "schema_version",
+    "profile",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "profile_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "schema_version": {
+      "enum": [
+        "1.0.0",
+        "1.1.0"
+      ]
+    },
+    "profile": {
+      "$ref": "candidate-profile.schema.json"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://radix.local/schemas/jd-extraction-result.schema.json",
+  "title": "JdExtractionResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source_type", "source_file", "company", "role", "location", "skills", "warnings"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "source_type": { "const": "jd" },
+    "source_file": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "company": { "type": ["string", "null"], "maxLength": 200 },
+    "role": { "type": ["string", "null"], "maxLength": 200 },
+    "location": { "type": ["string", "null"], "maxLength": 200 },
+    "skills": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/jdSkillRequirement" }
+    },
+    "warnings": { "type": "array", "items": { "type": "string", "maxLength": 500 } }
+  },
+  "$defs": {
+    "jdSkillRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skill_name", "category_code", "evidence", "confidence", "requirement_type"],
+      "properties": {
+        "skill_name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "category_code": { "enum": ["COD", "DSA", "OOD", "APTI", "COMM", "AI", "CLOUD", "SQL", "SWE", "SYSD", "NETW", "OS", "OTHER"] },
+        "evidence": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "requirement_type": { "enum": ["required", "preferred", "unknown"] },
+        "canonical_skill_key": { "type": ["string", "null"], "maxLength": 120 }
+      }
+    }
+  }
+}

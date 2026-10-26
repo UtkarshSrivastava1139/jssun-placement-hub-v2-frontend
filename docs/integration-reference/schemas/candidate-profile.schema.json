@@ -1,0 +1,505 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://radix.local/schemas/candidate-profile.schema.json",
+  "title": "CandidateProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "name",
+    "email",
+    "education",
+    "skills",
+    "projects",
+    "hackathons",
+    "internships",
+    "certifications",
+    "preferred_roles",
+    "category_assessments",
+    "resume_metadata"
+  ],
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0.0",
+        "1.1.0"
+      ],
+      "description": "Profiles without topic_assessment use 1.0.0; topic-based assessments use additive version 1.1.0."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "email": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "email",
+      "maxLength": 254
+    },
+    "education": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/education"
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/candidateSkill"
+      }
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/project"
+      }
+    },
+    "hackathons": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/experienceItem"
+      }
+    },
+    "internships": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/experienceItem"
+      }
+    },
+    "certifications": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/certification"
+      }
+    },
+    "preferred_roles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      }
+    },
+    "category_assessments": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "description": "Must contain each of the twelve RADIX categories exactly once; uniqueness by category_code is enforced in application validation.",
+      "items": {
+        "$ref": "#/$defs/categoryAssessment"
+      }
+    },
+    "resume_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "original_filename",
+        "parsed_at",
+        "raw_file_retained"
+      ],
+      "properties": {
+        "original_filename": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 255
+        },
+        "parsed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "raw_file_retained": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "categoryCode": {
+      "enum": [
+        "COD",
+        "DSA",
+        "OOD",
+        "APTI",
+        "COMM",
+        "AI",
+        "CLOUD",
+        "SQL",
+        "SWE",
+        "SYSD",
+        "NETW",
+        "OS"
+      ]
+    },
+    "education": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "degree",
+        "institution",
+        "field_of_study",
+        "graduation_year"
+      ],
+      "properties": {
+        "degree": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        },
+        "institution": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        },
+        "field_of_study": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        },
+        "graduation_year": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1950,
+          "maximum": 2100
+        }
+      }
+    },
+    "candidateSkill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skill_name",
+        "category_code",
+        "evidence",
+        "confidence",
+        "provenance",
+        "canonical_skill_key"
+      ],
+      "properties": {
+        "skill_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "category_code": {
+          "enum": [
+            "COD",
+            "DSA",
+            "OOD",
+            "APTI",
+            "COMM",
+            "AI",
+            "CLOUD",
+            "SQL",
+            "SWE",
+            "SYSD",
+            "NETW",
+            "OS",
+            "OTHER"
+          ]
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "provenance": {
+          "enum": [
+            "resume_extraction",
+            "candidate_entered",
+            "project",
+            "internship",
+            "certification",
+            "other"
+          ]
+        },
+        "canonical_skill_key": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "description",
+        "technologies",
+        "outcome"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1500
+        },
+        "technologies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "outcome": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        }
+      }
+    },
+    "experienceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "organization",
+        "start_date",
+        "end_date",
+        "description"
+      ],
+      "properties": {
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        },
+        "organization": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        },
+        "start_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 40
+        },
+        "end_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 40
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 1500
+        }
+      }
+    },
+    "certification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "issuer",
+        "issued_date"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "issuer": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        },
+        "issued_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 40
+        }
+      }
+    },
+    "categoryAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category_code",
+        "self_assessed_level",
+        "assessment_basis",
+        "evidence_note"
+      ],
+      "properties": {
+        "category_code": {
+          "$ref": "#/$defs/categoryCode"
+        },
+        "self_assessed_level": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 10
+        },
+        "assessment_basis": {
+          "enum": [
+            "candidate_self_assessment",
+            "unassessed"
+          ]
+        },
+        "evidence_note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        },
+        "topic_assessment": {
+          "$ref": "#/$defs/topicAssessment"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "self_assessed_level": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "self_assessed_level"
+            ]
+          },
+          "then": {
+            "properties": {
+              "assessment_basis": {
+                "const": "candidate_self_assessment"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "self_assessed_level": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "self_assessed_level"
+            ]
+          },
+          "then": {
+            "properties": {
+              "assessment_basis": {
+                "const": "unassessed"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "topicAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "responses",
+        "suggested_level",
+        "status",
+        "scoring_version",
+        "confirmed"
+      ],
+      "properties": {
+        "responses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/topicResponse"
+          }
+        },
+        "suggested_level": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 10
+        },
+        "status": {
+          "enum": [
+            "suggested",
+            "insufficient_evidence",
+            "data_unavailable"
+          ]
+        },
+        "scoring_version": {
+          "const": "topic-self-assessment-v1"
+        },
+        "confirmed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "topicResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "topic_id",
+        "response"
+      ],
+      "properties": {
+        "topic_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "response": {
+          "enum": [
+            "unfamiliar",
+            "recognize",
+            "guided",
+            "independent"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://radix.local/schemas/skill-match-result.schema.json",
+  "title": "SkillMatchResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "profile_id",
+    "job_description_id",
+    "company",
+    "role",
+    "match_score",
+    "scoring_version",
+    "created_at",
+    "matched_skills",
+    "possible_matches",
+    "missing_skills",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "profile_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "job_description_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "company": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    },
+    "role": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    },
+    "match_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "scoring_version": {
+      "const": "sm-v1"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "matched_skills": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/matchedSkill"
+      }
+    },
+    "possible_matches": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/possibleMatch"
+      }
+    },
+    "missing_skills": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/requirement"
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unique_requirements",
+        "confirmed_matches",
+        "possible_count",
+        "missing_count",
+        "interpretation_notice"
+      ],
+      "properties": {
+        "unique_requirements": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "confirmed_matches": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "possible_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "missing_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "interpretation_notice": {
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    }
+  },
+  "$defs": {
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skill_name",
+        "category_code",
+        "evidence",
+        "confidence",
+        "requirement_type",
+        "weight"
+      ],
+      "properties": {
+        "skill_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category_code": {
+          "enum": [
+            "COD",
+            "DSA",
+            "OOD",
+            "APTI",
+            "COMM",
+            "AI",
+            "CLOUD",
+            "SQL",
+            "SWE",
+            "SYSD",
+            "NETW",
+            "OS",
+            "OTHER"
+          ]
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "requirement_type": {
+          "enum": [
+            "required",
+            "preferred",
+            "unknown"
+          ]
+        },
+        "weight": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        }
+      }
+    },
+    "matchedSkill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirement",
+        "candidate_skill_name",
+        "candidate_evidence",
+        "match_method"
+      ],
+      "properties": {
+        "requirement": {
+          "$ref": "#/$defs/requirement"
+        },
+        "candidate_skill_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "candidate_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "match_method": {
+          "enum": [
+            "exact",
+            "alias"
+          ]
+        }
+      }
+    },
+    "possibleMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirement",
+        "candidate_skill_name",
+        "candidate_evidence",
+        "similarity",
+        "review_status"
+      ],
+      "properties": {
+        "requirement": {
+          "$ref": "#/$defs/requirement"
+        },
+        "candidate_skill_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "candidate_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "similarity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "review_status": {
+          "const": "needs_user_review"
+        }
+      }
+    }
+  }
+}

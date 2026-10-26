@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://radix.local/schemas/resume-extraction-result.schema.json",
+  "title": "ResumeExtractionResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source_type", "source_file", "company", "role", "location", "skills", "candidate_details", "warnings"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "source_type": { "const": "resume" },
+    "source_file": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "company": { "type": ["string", "null"], "maxLength": 200, "description": "Usually null for a resume; retained for shared envelope compatibility." },
+    "role": { "type": ["string", "null"], "maxLength": 200 },
+    "location": { "type": ["string", "null"], "maxLength": 200 },
+    "skills": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/resumeSkill" }
+    },
+    "candidate_details": { "$ref": "#/$defs/candidateDetails" },
+    "warnings": { "type": "array", "items": { "type": "string", "maxLength": 500 } }
+  },
+  "$defs": {
+    "resumeSkill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skill_name", "category_code", "evidence", "confidence"],
+      "properties": {
+        "skill_name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "category_code": { "enum": ["COD", "DSA", "OOD", "APTI", "COMM", "AI", "CLOUD", "SQL", "SWE", "SYSD", "NETW", "OS", "OTHER"] },
+        "evidence": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "canonical_skill_key": { "type": ["string", "null"], "maxLength": 120 }
+      }
+    },
+    "education": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["degree", "institution", "field_of_study", "graduation_year", "evidence"],
+      "properties": {
+        "degree": { "type": ["string", "null"], "maxLength": 160 },
+        "institution": { "type": ["string", "null"], "maxLength": 200 },
+        "field_of_study": { "type": ["string", "null"], "maxLength": 160 },
+        "graduation_year": { "type": ["integer", "null"], "minimum": 1950, "maximum": 2100 },
+        "evidence": { "type": ["string", "null"], "maxLength": 500 }
+      }
+    },
+    "experienceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "organization", "start_date", "end_date", "description", "evidence"],
+      "properties": {
+        "title": { "type": ["string", "null"], "maxLength": 160 },
+        "organization": { "type": ["string", "null"], "maxLength": 200 },
+        "start_date": { "type": ["string", "null"], "maxLength": 40 },
+        "end_date": { "type": ["string", "null"], "maxLength": 40 },
+        "description": { "type": ["string", "null"], "maxLength": 1500 },
+        "evidence": { "type": ["string", "null"], "maxLength": 500 }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "description", "technologies", "outcome", "evidence"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "description": { "type": ["string", "null"], "maxLength": 1500 },
+        "technologies": { "type": "array", "items": { "type": "string", "maxLength": 120 } },
+        "outcome": { "type": ["string", "null"], "maxLength": 500 },
+        "evidence": { "type": ["string", "null"], "maxLength": 500 }
+      }
+    },
+    "certification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "issuer", "issued_date", "evidence"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "issuer": { "type": ["string", "null"], "maxLength": 200 },
+        "issued_date": { "type": ["string", "null"], "maxLength": 40 },
+        "evidence": { "type": ["string", "null"], "maxLength": 500 }
+      }
+    },
+    "candidateDetails": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "email", "education", "projects", "experience", "hackathons", "internships", "certifications", "preferred_roles"],
+      "properties": {
+        "name": { "type": ["string", "null"], "maxLength": 160 },
+        "email": { "type": ["string", "null"], "format": "email", "maxLength": 254 },
+        "education": { "type": "array", "items": { "$ref": "#/$defs/education" } },
+        "projects": { "type": "array", "items": { "$ref": "#/$defs/project" } },
+        "experience": { "type": "array", "items": { "$ref": "#/$defs/experienceItem" } },
+        "hackathons": { "type": "array", "items": { "$ref": "#/$defs/experienceItem" } },
+        "internships": { "type": "array", "items": { "$ref": "#/$defs/experienceItem" } },
+        "certifications": { "type": "array", "items": { "$ref": "#/$defs/certification" } },
+        "preferred_roles": { "type": "array", "items": { "type": "string", "maxLength": 160 } }
+      }
+    }
+  }
+}
